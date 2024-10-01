@@ -1,1 +1,1 @@
-# wom-projekt-virtualboard
+# wom24-exempel

@@ -1,0 +1,7 @@
+.board-styling {
+    background-color: blue;
+    padding: 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    color: white;
+}

@@ -1,0 +1,28 @@
+#@apiURL=http://localhost:8080
+@apiURL={{$dotenv API_URL}}
+@token={{$dotenv TEMP_TOKEN}}
+
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "email": "CodingChallenge@gmail.com",
+    "password": "Password123",
+    "name": "victor"
+}
+
+
+###
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+    "email": "CodingChallenge@gmail.com",
+    "password": "Password123"
+}
+
+###
+GET {{apiURL}}/users/profile
+Authorization: Bearer {{token}}

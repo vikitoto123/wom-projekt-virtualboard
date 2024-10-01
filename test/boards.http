@@ -1,0 +1,24 @@
+@apiURL=http://localhost:8080
+@token={{$dotenv TEMP_TOKEN}}
+
+###
+GET {{apiURL}}/boards
+Authorization: Bearer 
+
+###
+POST {{apiURL}}/boards
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+    "title": "Matlista",
+    "content": "Kött, Mjölk"
+}
+
+###
+PUT {{apiURL}}/notes/66ebdb3b4e5bd611f3ab5ea4
+Content-Type: application/json
+
+{
+    "board": "gå på krog"
+}

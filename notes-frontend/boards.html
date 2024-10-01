@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boards</title>
+    <link rel="stylesheet" href="index.css"> 
+</head>
+<body>
+
+    <h1>My Boards</h1>
+    
+    <div id="boards-container"></div>
+
+    <h2>Create New Board</h2>
+    <input id="new-board-name" type="text" placeholder="Board Name">
+    <input id="content" type="text" placeholder="Content">
+
+    <button id="create-board-btn">Create Board</button>
+
+    <script>
+        const API_URL = "http://localhost:8080";
+
+        async function fetchBoards() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/boards`, {
+                    method: "GET",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` 
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Boards fetched:', data); 
+                displayBoards(data.boards); 
+            } catch (error) {
+                console.error("Error fetching boards:", error);
+            }
+        }
+
+        
+        function displayBoards(boards) {
+            const container = document.getElementById('boards-container');
+            container.innerHTML = ''; 
+
+            boards.forEach(board => {
+                const boardDiv = document.createElement('div');
+                boardDiv.className = 'board-styling'; 
+                const titleElement = document.createElement('h3');
+                titleElement.textContent = board.title; 
+                boardDiv.appendChild(titleElement);
+
+                const contentElement = document.createElement('p');
+                contentElement.textContent = board.content; 
+                boardDiv.appendChild(contentElement);
+
+                container.appendChild(boardDiv);
+            });
+        }
+
+        async function createBoard() {
+            const boardName = document.getElementById('new-board-name').value;
+            const content = document.getElementById('content').value;
+
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/boards`, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({ title: boardName, content:content })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const newBoard = await response.json();
+                console.log(newBoard);
+                fetchBoards();
+            } catch (error) {
+                console.error("Error creating board:", error);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            fetchBoards(); 
+        });
+
+        document.getElementById('create-board-btn').addEventListener('click', createBoard);
+
+    </script>
+
+</body>
+</html>
