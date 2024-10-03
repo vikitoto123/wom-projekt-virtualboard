@@ -12,7 +12,7 @@
     <input id="username" type="text" placeholder="Användarnamn"><br>
     <input id="password" type="password" placeholder="Lösenord">
     <input id="btn-login" type="button" value="Logga in">
-
+    <div id="erroroutput"></div>
 
     <script>
         const API_URL = "http://localhost:8080";
@@ -38,12 +38,13 @@
                 console.log(respData);
                 const jwt_token = respData.jwt;
                 localStorage.setItem('token', jwt_token);
-                window.location.href = 'http://127.0.0.1:5500/notes-frontend/boards.html';
+                window.location.href = 'http://127.0.0.1:5500/boards-frontend/boards.html';
 
 
 
             } catch (error) {
                 console.error("Error during login:", error);
+                document.querySelector('#erroroutput').innerHTML = "Login failed";
             }
         }
 
