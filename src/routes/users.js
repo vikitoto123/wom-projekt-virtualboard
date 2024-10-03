@@ -10,12 +10,13 @@ const prisma = new PrismaClient()
 router.get('/', async (req, res) => {
     try {
         const users = await prisma.user.findMany()
-        res.send({msg: "User GET", users: users})
+        res.send({ msg: "User GET", users: users })
     } catch (error) {
-        res.status(500).send({msg: "Error", errormsg: error.message})
+        res.status(500).send({ msg: "Error", errormsg: error.message })
     }
 })
 
+// Sign Up
 router.post('/', async (req, res) => {
     console.log(req.body)
     const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -40,7 +41,7 @@ router.post('/', async (req, res) => {
             status: 1
         })
     }
-    
+
 })
 
 // Login to Website
@@ -67,7 +68,7 @@ router.post('/login', async (req, res) => {
         role: user.role
     }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
-    res.send({msg: "Login OK", jwt: token})
+    res.send({ msg: "Login OK", jwt: token })
 })
 
 // Sign Up to website
@@ -83,9 +84,9 @@ router.post('/sign-up', async (req, res) => {
                 password: hashPass
             }
         })
-        res.send({msg: "New user created!", user: req.body.name})
+        res.send({ msg: "New user created!", user: req.body.name })
     } catch (error) {
-        res.status(500).send({msg: "Sign up failed", errorMsg: error.message})
+        res.status(500).send({ msg: "Sign up failed", errorMsg: error.message })
     }
 })
 
@@ -96,10 +97,10 @@ router.get('/profile', authorize, async (req, res) => {
                 id: req.userData.sub
             }
         })
-        res.send({msg: `Hej ${user.name}!`})
+        res.send({ msg: `Hej ${user.name}!` })
     } catch (error) {
         console.log(error)
-        res.status(500).send({msg: "Error"})
+        res.status(500).send({ msg: "Error" })
     }
 })
 
