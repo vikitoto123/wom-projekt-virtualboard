@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes</title>
 </head>
+
 <body>
-    
+
     <input id="username" type="text" placeholder="Användarnamn"><br>
     <input id="password" type="password" placeholder="Lösenord">
     <input id="btn-login" type="button" value="Logga in">
@@ -16,34 +18,34 @@
         const API_URL = "http://localhost:8080";
 
         async function logIn(user, pass) {
-    console.log(user, pass);
+            console.log(user, pass);
 
-    try {
-        const response = await fetch(`${API_URL}/users/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: user,
-                password: pass
-            })
-        });
+            try {
+                const response = await fetch(`${API_URL}/users/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: user,
+                        password: pass
+                    })
+                });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const respData = await response.json();
+                console.log(respData);
+                const jwt_token = respData.jwt;
+                localStorage.setItem('token', jwt_token);
+                window.location.href = 'http://127.0.0.1:5500/notes-frontend/boards.html';
+
+
+
+            } catch (error) {
+                console.error("Error during login:", error);
+            }
         }
-
-        const respData = await response.json();
-        console.log(respData);
-        const jwt_token = respData.jwt;
-        localStorage.setItem('token', jwt_token);
-        window.location.href = 'http://127.0.0.1:5500/notes-frontend/boards.html';
-    
-
-
-    } catch (error) {
-        console.error("Error during login:", error);
-    }
-}
 
 
         document.querySelector('#btn-login').addEventListener('click', () => {
@@ -51,9 +53,10 @@
             const pass = document.querySelector('#password').value;
 
             logIn(user, pass);
-            
+
         });
     </script>
 
 </body>
+
 </html>

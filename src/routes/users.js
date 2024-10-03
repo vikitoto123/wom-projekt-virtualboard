@@ -7,6 +7,14 @@ const authorize = require('../middleware/auth')
 const router = express.Router()
 const prisma = new PrismaClient()
 
+router.get('/', async (req, res) => {
+    try {
+        const users = await prisma.user.findMany()
+        res.send({msg: "User GET", users: users})
+    } catch (error) {
+        res.status(500).send({msg: "Error", errormsg: error.message})
+    }
+})
 
 router.post('/', async (req, res) => {
     console.log(req.body)
@@ -21,16 +29,21 @@ router.post('/', async (req, res) => {
             }
         })
 
-        res.send({msg: "New user created!"})
+        res.send({
+            msg: "New user created!",
+            status: 0
+        })
     } catch (error) {
         console.log(error.message)
-        res.status(500).send({msg: "ERROR"})
+        res.status(500).send({
+            msg: "Sign Up Failed",
+            status: 1
+        })
     }
-
-    
     
 })
 
+// Login to Website
 router.post('/login', async (req, res) => {
     const user = await prisma.user.findUnique({
         where: { email: req.body.email }
@@ -46,7 +59,7 @@ router.post('/login', async (req, res) => {
         console.log("BAD PASSWORD")
         return res.status(401).send({ msg: "Authentication failed" })
     }
-
+    console.log(process.env.JWT_SECRET)
     const token = await jwt.sign({
         sub: user.id,
         email: user.email,
@@ -55,6 +68,25 @@ router.post('/login', async (req, res) => {
     }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
     res.send({msg: "Login OK", jwt: token})
+})
+
+// Sign Up to website
+router.post('/sign-up', async (req, res) => {
+    const hashPass = await bcrypt.hash(req.body.password, 10)
+
+    try {
+
+        const newUser = await prisma.user.create({
+            data: {
+                name: req.body.name,
+                email: req.body.email,
+                password: hashPass
+            }
+        })
+        res.send({msg: "New user created!", user: req.body.name})
+    } catch (error) {
+        res.status(500).send({msg: "Sign up failed", errorMsg: error.message})
+    }
 })
 
 router.get('/profile', authorize, async (req, res) => {

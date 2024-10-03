@@ -2,9 +2,11 @@
 @apiURL={{$dotenv API_URL}}
 @token={{$dotenv TEMP_TOKEN}}
 
+###
+GET http://localhost:8080/users/
 
 ###
-POST http://localhost:8080/users
+POST http://localhost:8080/users/
 Content-Type: application/json
 
 {
@@ -19,7 +21,7 @@ POST http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-    "email": "CodingChallenge@gmail.com",
+    "email": "hermes@email.com",
     "password": "Password123"
 }
 
