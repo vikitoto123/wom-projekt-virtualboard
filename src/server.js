@@ -1,6 +1,5 @@
 const express = require('express')
 const cors = require('cors')
-const checkName = require('./middleware/check-name')
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8080
@@ -16,9 +15,11 @@ app.get('/', (req, res) => {
 
 app.use(express.json())
 
+// Boards endpoint
 const boardsRouter = require('./routes/boards')
 app.use('/boards', boardsRouter)
 
+// User endpoint
 const usersRouter = require('./routes/users')
 app.use('/users', usersRouter)
 

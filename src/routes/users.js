@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { PrismaClient } = require('@prisma/client')
 const authorize = require('../middleware/auth')
+const auth = require('../middleware/auth')
 
 const router = express.Router()
 const prisma = new PrismaClient()
@@ -50,14 +51,10 @@ router.post('/login', async (req, res) => {
         where: { email: req.body.email }
     })
 
-    if (user == null) {
-        console.log("BAD USERNAME")
-        return res.status(401).send({ msg: "Authentication failed" })
-    }
     const match = await bcrypt.compare(req.body.password, user.password)
 
-    if (!match) {
-        console.log("BAD PASSWORD")
+    if (!match || !user) {
+        console.log("Login failed")
         return res.status(401).send({ msg: "Authentication failed" })
     }
     console.log(process.env.JWT_SECRET)
@@ -66,27 +63,28 @@ router.post('/login', async (req, res) => {
         email: user.email,
         name: user.name,
         role: user.role
+        // TODO Tillägg vilka boards man har access till, och i databasen
     }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
     res.send({ msg: "Login OK", jwt: token })
 })
 
-// Sign Up to website
-router.post('/sign-up', async (req, res) => {
-    const hashPass = await bcrypt.hash(req.body.password, 10)
-
+// Update user
+router.put('/:id', authorize, async (req, res) => {
     try {
-
-        const newUser = await prisma.user.create({
+        const updateUser = await prisma.user.update({
+            where: {
+                id: req.params.id
+            },
             data: {
                 name: req.body.name,
                 email: req.body.email,
-                password: hashPass
+                password: hashedPassword
             }
         })
-        res.send({ msg: "New user created!", user: req.body.name })
+        res.send({ msg: `User ${req.params.id} updated` })
     } catch (error) {
-        res.status(500).send({ msg: "Sign up failed", errorMsg: error.message })
+        res.status(500).send({ msg: "Update error", errormsg: error.message })
     }
 })
 

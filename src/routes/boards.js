@@ -5,7 +5,7 @@ const authorize = require('../middleware/auth')
 
 const prisma = new PrismaClient()
 
-
+// Get Boards for specific user
 router.get('/', authorize, async (req, res) => {
     console.log("boards / GET")
     try {
@@ -14,14 +14,15 @@ router.get('/', authorize, async (req, res) => {
                 authorId: req.userData.sub
             }
         })
-        res.send({msg: `Boards for user ${req.userData.name}`, boards: boards})
+        res.send({ msg: `Boards for user ${req.userData.name}`, boards: boards })
     } catch (error) {
         console.log(error)
-        res.status(500).send({msg: "Error"})
+        res.status(500).send({ msg: "Error" })
     }
 
 })
 
+// Create BoardCard
 router.post('/', authorize, async (req, res) => {
     console.log(req.body)
 
@@ -34,27 +35,45 @@ router.post('/', authorize, async (req, res) => {
             }
         })
 
-        res.send({msg: "New board created!"})
+        res.send({ msg: "New board created!" })
     } catch (error) {
         console.log(error.message)
-        res.status(500).send({msg: "ERROR"})
+        res.status(500).send({ msg: "ERROR" })
     }
-    
+
 })
 
+// Update Board
 router.put('/:id', async (req, res) => {
     console.log(req.body)
 
     const updateBoard = await prisma.boards.update({
         where: {
-          id: req.params.id,
+            id: req.params.id,
         },
         data: {
             board: req.body.note,
         },
-      })
+    })
 
-    res.send({msg: `board ${req.params.id} updated`})
+    res.send({ msg: `board ${req.params.id} updated` })
+})
+
+// Delete Board
+router.delete('/:id', async (req, res) => {
+
+    try {
+        const deleteBoard = await prisma.boards.delete({
+            where: {
+                id: req.params.id
+            }
+        })
+        res.send({ msg: `Board ${req.params.id} deleted` })
+    } catch (error) {
+        res.status(500).send({ msg: "Deletetion Failed", errormsg: error.message })
+    }   
+
+
 })
 
 module.exports = router
