@@ -26,6 +26,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Notes     Notes[]
+  Boards    Boards[] @relation("UserBoards") 
 }
 
 model Boards {
@@ -33,4 +34,15 @@ model Boards {
     authorId  String   @db.ObjectId
     title     String
     content   String
+    cards     Cards[] 
+    author    User     @relation("UserBoards", fields: [authorId], references: [id]) // Define the opposite relation field
 }
+
+model Cards {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    title     String
+    content   String
+    boardId   String   @db.ObjectId
+    board     Boards   @relation(fields: [boardId], references: [id])
+}
+

@@ -8,11 +8,11 @@ Authorization: Bearer
 ###
 POST {{apiURL}}/boards
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NmY5M2JiNzdhZWNmZjdmZmY0NDdhY2EiLCJlbWFpbCI6IkNvZGluZ0NoYWxsZW5nZUBnbWFpbC5jb20iLCJuYW1lIjoidmljdG9yIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjgxMjExNjQsImV4cCI6MTczMDcxMzE2NH0.f5ksSoHwn782fq4cOwyW3rV1hMhvpRWqfIkLdYWVa-8
 
 {
-    "title": "Matlista",
-    "content": "Kött, Mjölk"
+    "title": "Reading List",
+    "content": "This board contains books I want to read."
 }
 
 ###

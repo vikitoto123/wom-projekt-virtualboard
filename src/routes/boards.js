@@ -7,41 +7,54 @@ const prisma = new PrismaClient()
 
 // Get Boards for specific user
 router.get('/', authorize, async (req, res) => {
-    console.log("boards / GET")
     try {
         const boards = await prisma.boards.findMany({
-            where: {
-                authorId: req.userData.sub
+            where: { authorId: req.userData.sub }, 
+            include: {
+                cards: { 
+                    select: {
+                        id: true,
+                        title: true,
+                        content: true
+                    }
+                }
             }
-        })
-        res.send({ msg: `Boards for user ${req.userData.name}`, boards: boards })
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({ msg: "Error" })
-    }
+        });
 
-})
+        res.send({
+            msg: `Boards for user ${req.userData.name || req.userData.sub}`,
+            boards: boards.map(board => ({
+                id: board.id,
+                title: board.title,
+                description: board.content,
+                cards: board.cards 
+            }))
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ msg: "ERROR" });
+    }
+});
 
 // Create BoardCard
-router.post('/', authorize, async (req, res) => {
-    console.log(req.body)
+router.post('/:boardId/cards', authorize, async (req, res) => {
+    const boardId = req.params.boardId; 
+    const { title, content } = req.body; 
 
     try {
-        const newBoard = await prisma.boards.create({
+        const newCard = await prisma.cards.create({
             data: {
-                authorId: req.userData.sub,
-                title: req.body.title,
-                content: req.body.content
-            }
-        })
-
-        res.send({ msg: "New board created!" })
+                title: title,
+                content: content,
+                boardId: boardId, 
+            },
+        });
+        res.status(201).send(newCard);
     } catch (error) {
-        console.log(error.message)
-        res.status(500).send({ msg: "ERROR" })
+        console.error(error); 
+        res.status(500).send({ msg: "ERROR" });
     }
-
-})
+});
 
 // Update Board
 router.put('/:id', async (req, res) => {
