@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
 router.get('/', authorize, async (req, res) => {
     try {
         const boards = await prisma.boards.findMany({
-            where: { authorId: req.userData.sub }, 
+            //where: { authorId: req.userData.sub },  Tog bårt, eftersom man kunde endast se boards en själv har lagat
             include: {
                 cards: { 
                     select: {
