@@ -51,6 +51,11 @@ router.post('/login', async (req, res) => {
         where: { email: req.body.email }
     })
 
+    if (!user) {
+        console.log("Login failed")
+        return res.status(401).send({ msg: "Authentication failed" })
+    }
+
     const match = await bcrypt.compare(req.body.password, user.password)
 
     if (!match || !user) {
