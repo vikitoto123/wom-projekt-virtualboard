@@ -89,4 +89,28 @@ router.delete('/:id', async (req, res) => {
 
 })
 
+router.get('/:boardId/cards', authorize, async (req, res) => {
+    const boardId = req.params.boardId; 
+
+    try {
+        const cards = await prisma.cards.findMany({
+            where: { boardId: boardId }, 
+            select: {
+                id: true,
+                title: true,
+                content: true
+            }
+        });
+
+        if (cards.length === 0) {
+            return res.status(404).send({ msg: "No cards found for this board" });
+        }
+
+        res.send(cards);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ msg: "ERROR" });
+    }
+});
+
 module.exports = router
