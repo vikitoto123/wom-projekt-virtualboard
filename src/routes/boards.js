@@ -36,7 +36,7 @@ router.get('/', authorize, async (req, res) => {
     }
 });
 
-// Create BoardCard
+// Create BoardCard POST
 router.post('/:boardId/cards', authorize, async (req, res) => {
     const boardId = req.params.boardId; 
     const { title, content } = req.body; 
@@ -122,6 +122,7 @@ router.delete('/:id', async (req, res) => {
 
 })
 
+// GET Cards for board
 router.get('/:boardId/cards', authorize, async (req, res) => {
     const boardId = req.params.boardId; 
 
