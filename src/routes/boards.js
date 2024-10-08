@@ -72,6 +72,39 @@ router.put('/:id', async (req, res) => {
     res.send({ msg: `board ${req.params.id} updated` })
 })
 
+router.put('/:boardId/cards/:id', authorize, async (req, res) => {
+    const { boardId, id: cardId } = req.params; 
+    const { title, content } = req.body; 
+
+    console.log(`Updating card with ID: ${cardId} in board: ${boardId} with title: ${title} and content: ${content}`);
+
+    try {
+        const card = await prisma.cards.findUnique({
+            where: { id: cardId },
+            include: { board: true }, 
+        });
+
+        if (!card || card.boardId !== boardId) {
+            return res.status(404).send({ msg: "Card not found in this board." });
+        }
+
+        const updatedCard = await prisma.cards.update({
+            where: { id: cardId },
+            data: { 
+                title, 
+                content, 
+            },
+        });
+
+        res.send(updatedCard);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ msg: "ERROR" });
+    }
+});
+
+
+
 // Delete Board
 router.delete('/:id', async (req, res) => {
 
