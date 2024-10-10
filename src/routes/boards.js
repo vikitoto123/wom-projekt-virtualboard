@@ -106,21 +106,22 @@ router.put('/:boardId/cards/:id', authorize, async (req, res) => {
 
 
 // Delete Board
-router.delete('/:id', async (req, res) => {
-
+router.delete('/:boardId/cards/:cardId', async (req, res) => {
     try {
-        const deleteBoard = await prisma.boards.delete({
+        const { boardId, cardId } = req.params;
+
+        const deleteCard = await prisma.cards.delete({
             where: {
-                id: req.params.id
-            }
-        })
-        res.send({ msg: `Board ${req.params.id} deleted` })
+                id: cardId,
+            },
+        });
+
+        res.send({ msg: `Card ${cardId} deleted from board ${boardId}` });
     } catch (error) {
-        res.status(500).send({ msg: "Deletetion Failed", errormsg: error.message })
-    }   
+        res.status(500).send({ msg: "Deletion Failed", errormsg: error.message });
+    }
+});
 
-
-})
 
 // GET Cards for board
 router.get('/:boardId/cards', authorize, async (req, res) => {
