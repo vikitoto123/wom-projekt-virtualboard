@@ -44,5 +44,7 @@ model Cards {
     content   String
     boardId   String   @db.ObjectId
     board     Boards   @relation(fields: [boardId], references: [id])
+    xPosition String   
+    yPosition String   
 }
 

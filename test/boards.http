@@ -6,13 +6,15 @@ GET {{apiURL}}/boards
 Authorization: Bearer 
 
 ###
-POST {{apiURL}}/boards
+POST {{apiURL}}/boards/670117cfe18d5d279cb052e0/cards
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NmY5M2JiNzdhZWNmZjdmZmY0NDdhY2EiLCJlbWFpbCI6IkNvZGluZ0NoYWxsZW5nZUBnbWFpbC5jb20iLCJuYW1lIjoidmljdG9yIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjgxMjExNjQsImV4cCI6MTczMDcxMzE2NH0.f5ksSoHwn782fq4cOwyW3rV1hMhvpRWqfIkLdYWVa-8
 
 {
-    "title": "Reading List",
-    "content": "This board contains books I want to read."
+    "title": "TESTING",
+    "content": "This board contains books I want to read.",
+    "xPosition": "1000",
+    "yPosition": "2000"
 }
 
 ###

@@ -15,7 +15,9 @@ router.get('/', authorize, async (req, res) => {
                     select: {
                         id: true,
                         title: true,
-                        content: true
+                        content: true,
+                        xPosition: true,
+                        yPosition: true
                     }
                 }
             }
@@ -27,7 +29,9 @@ router.get('/', authorize, async (req, res) => {
                 id: board.id,
                 title: board.title,
                 description: board.content,
-                cards: board.cards 
+                cards: board.cards,
+                xPosition: board.xPosition,
+                yPosition: board.yPosition
             }))
         });
     } catch (error) {
@@ -39,7 +43,7 @@ router.get('/', authorize, async (req, res) => {
 // Create BoardCard POST
 router.post('/:boardId/cards', authorize, async (req, res) => {
     const boardId = req.params.boardId; 
-    const { title, content } = req.body; 
+    const { title, content, xPosition, yPosition } = req.body; 
 
     try {
         const newCard = await prisma.cards.create({
@@ -47,6 +51,8 @@ router.post('/:boardId/cards', authorize, async (req, res) => {
                 title: title,
                 content: content,
                 boardId: boardId, 
+                xPosition: xPosition,
+                yPosition: yPosition
             },
         });
         res.status(201).send(newCard);
@@ -74,9 +80,9 @@ router.put('/:id', async (req, res) => {
 
 router.put('/:boardId/cards/:id', authorize, async (req, res) => {
     const { boardId, id: cardId } = req.params; 
-    const { title, content } = req.body; 
+    const { title, content, xPosition, yPosition } = req.body; // Include xPosition and yPosition
 
-    console.log(`Updating card with ID: ${cardId} in board: ${boardId} with title: ${title} and content: ${content}`);
+    console.log(`Updating card with ID: ${cardId} in board: ${boardId} with title: ${title}, content: ${content}, xPosition: ${xPosition}, yPosition: ${yPosition}`);
 
     try {
         const card = await prisma.cards.findUnique({
@@ -93,6 +99,8 @@ router.put('/:boardId/cards/:id', authorize, async (req, res) => {
             data: { 
                 title, 
                 content, 
+                xPosition: xPosition, 
+                yPosition: yPosition  
             },
         });
 
@@ -102,6 +110,7 @@ router.put('/:boardId/cards/:id', authorize, async (req, res) => {
         res.status(500).send({ msg: "ERROR" });
     }
 });
+
 
 
 
