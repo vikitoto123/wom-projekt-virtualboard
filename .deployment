@@ -1,2 +1,3 @@
 [config]
 SCM_DO_BUILD_DURING_DEPLOYMENT=true
+project = C:\Users\hkvhe\Academics\2024-2025\WoM\Projekt 1\Newest\wom-projekt-virtualboard
