@@ -80,10 +80,7 @@ router.put('/:id', async (req, res) => {
 
 router.put('/:boardId/cards/:id', authorize, async (req, res) => {
     const { boardId, id: cardId } = req.params; 
-    const { title, content, xPosition, yPosition } = req.body; // Include xPosition and yPosition
-
-    console.log(`Updating card with ID: ${cardId} in board: ${boardId} with title: ${title}, content: ${content}, xPosition: ${xPosition}, yPosition: ${yPosition}`);
-
+    const { title, content, xPosition, yPosition } = req.body; 
     try {
         const card = await prisma.cards.findUnique({
             where: { id: cardId },
